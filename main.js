@@ -35,7 +35,7 @@ function init() {
     //creando la escena
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x050505);
-    const sprite = new THREE.TextureLoader().load("/circle.png");
+    const sprite = new THREE.TextureLoader().load("../circle.png");
     //textura que se puede utilizar en la 3D
 
 
