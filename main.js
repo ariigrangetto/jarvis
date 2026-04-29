@@ -17,16 +17,20 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     //ajustando la resolución según pantalla.
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate); //function
+    renderer.setAnimationLoop(animate);
     renderer.inspector = new Inspector();
     document.body.appendChild(renderer.domElement);
-    //importante para agregar toda la configuracion a la pantalla
+
     //Ajuste de cámara
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
     //1 para evitar que el elemento se cruce en la cámara y 10000 es la distancia máxima
     camera.position.z = 2300;
 
     controls = new OrbitControls(camera, renderer.domElement);
+    //permisos para mover la cámara
+    controls.enableDamping = true;
+    controls.minDistance = 100;
+    controls.maxDistance = 10000;
 
     //creando la escena
     scene = new THREE.Scene();
@@ -37,7 +41,6 @@ function init() {
 
     //geometria de la esfera
     const radius = 400;
-    const size = 30;
     const count = 100000;
     //cantidad de partículas
 
@@ -56,9 +59,10 @@ function init() {
         const hue = 0.5 + Math.random() * 0.1
         const lightness = 0.5 + Math.random() * 0.3;
         color.setHSL(hue, 1.0, lightness);
-        //va desde el tono (hue), la saturacion y la luminocidad
-        //colors tiene la propiedad tando r, g y b
+        //va desde el tono, la saturación y la luminocidad
         colors.push(color.r, color.g, color.b);
+
+        //tiempo de cada partícula
         timeOffsets.push(i / count);
     };
 
@@ -70,8 +74,9 @@ function init() {
 
     const material = new THREE.SpriteNodeMaterial({ blending: THREE.AdditiveBlending, depthWrite: false });
     material.colorNode = texture(sprite).mul(vec4(instancedBufferAttribute(colorAttribute), 2.5));
-    console.log(material)
-
+    //2.5 permite sobreiluminar las partículas
+    //el blanco puro tiene un valor de 1.0
+    //Al multiplicar, se multiplica el color blaco de la imagen original por el color azul
 
     const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.1));
     //Esto hace que cada particula tenga un tiempo único
